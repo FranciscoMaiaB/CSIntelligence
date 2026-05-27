@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Intelligence – Applause</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f1a;color:#e2e8f0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3730a3}
+.logo{font-size:20px;font-weight:700;color:#a5b4fc}.logo span{color:#f59e0b}
+.sync-btn{background:#4f46e5;color:white;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.sync-btn:hover{background:#6366f1}
+.filters{background:#1a1a2e;padding:14px 32px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #2d2d44;flex-wrap:wrap}
+.filter-label{font-size:12px;color:#9ca3af;font-weight:600}
+.fbtn{padding:5px 14px;border-radius:20px;border:1px solid #374151;background:transparent;color:#9ca3af;cursor:pointer;font-size:12px;font-weight:500;transition:all .2s}
+.f-ob{background:#0891b2;border-color:#0891b2;color:white}
+.f-ad{background:#059669;border-color:#059669;color:white}
+.f-on{background:#7c3aed;border-color:#7c3aed;color:white}
+.f-ch{background:#dc2626;border-color:#dc2626;color:white}
+.search-input{padding:6px 14px;border-radius:8px;border:1px solid #374151;background:#111827;color:#e2e8f0;font-size:13px;width:200px;outline:none}
+.tab-row{display:flex;border-bottom:1px solid #2d2d44;padding:0 32px;background:#13131f}
+.tab{padding:12px 22px;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:#a5b4fc;border-bottom-color:#4f46e5}
+.tc{display:none}.tc.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;padding:24px 32px}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kc{background:#1a1a2e;border:1px solid #2d2d44;border-radius:12px;padding:18px;position:relative;overflow:hidden}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kb::before{background:#3b82f6}.kc2::before{background:#06b6d4}.kg::before{background:#10b981}
+.kp::before{background:#8b5cf6}.ka::before{background:#f59e0b}.kr::before{background:#ef4444}
+.kl{font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.kv{font-size:30px;font-weight:700;color:#f1f5f9;line-height:1}
+.ks{font-size:11px;color:#6b7280;margin-top:6px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-top:6px}
+.bw{background:#451a03;color:#fbbf24}.bu{background:#064e3b;color:#34d399}.bd{background:#450a0a;color:#f87171}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;padding:0 32px 24px}
+.g2{display:grid;grid-template-columns:2fr 1fr;gap:18px;padding:0 32px 24px}
+@media(max-width:900px){.g3,.g2{grid-template-columns:1fr}}
+.card{background:#1a1a2e;border:1px solid #2d2d44;border-radius:12px;padding:20px}
+.ct{font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:16px}
+.stitle{font-size:12px;font-weight:700;color:#64748b;padding:20px 32px 4px;text-transform:uppercase;letter-spacing:.5px}
+.pi{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pn{width:90px;font-size:12px;color:#9ca3af;text-align:right;flex-shrink:0}
+.pt{flex:1;height:22px;background:#111827;border-radius:5px;overflow:hidden}
+.pf{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:700;color:white;transition:width 1s ease}
+.pnum{width:30px;font-size:13px;font-weight:700;color:#e2e8f0;flex-shrink:0}
+.ai{display:flex;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:8px;font-size:12px}
+.ac{background:#1f0a0a;border-left:3px solid #ef4444}
+.aw{background:#1c1207;border-left:3px solid #f59e0b}
+.af{background:#0a1628;border-left:3px solid #3b82f6}
+.ao{background:#052e16;border-left:3px solid #10b981}
+.aico{font-size:14px;flex-shrink:0}
+.atxt{color:#d1d5db;line-height:1.5}.atxt strong{color:#f1f5f9}
+.atime{font-size:10px;color:#6b7280;margin-top:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:8px 12px;color:#6b7280;font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #2d2d44}
+.tbl td{padding:10px 12px;border-bottom:1px solid #1e2030;vertical-align:middle}
+.tbl tr:hover td{background:#1e2040}
+.sob{background:#083344;color:#22d3ee;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700}
+.sad{background:#052e16;color:#4ade80;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700}
+.son{background:#2e1065;color:#a78bfa;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700}
+.sch{background:#450a0a;color:#f87171;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.dg{background:#10b981}.dy{background:#f59e0b}.dr{background:#ef4444}
+.tri{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#111827;border-radius:8px;margin-bottom:8px;border:1px solid #1f2937}
+.tn{font-size:12px;font-weight:600;color:#e2e8f0}.td{font-size:11px;color:#6b7280;margin-top:3px}
+.tog{width:38px;height:21px;border-radius:11px;background:#374151;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tog.on{background:#4f46e5}
+.tog::after{content:'';position:absolute;width:17px;height:17px;border-radius:50%;background:white;top:2px;left:2px;transition:left .2s}
+.tog.on::after{left:19px}
+.btn{padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.bp{background:#4f46e5;color:white}.bp:hover{background:#6366f1}
+.bs{background:#059669;color:white}
+.bw2{background:#d97706;color:white}
+.inp{width:100%;padding:8px 12px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:13px;outline:none;margin-bottom:10px}
+.inp:focus{border-color:#4f46e5}
+.chart-wrap{height:200px;position:relative}
+.m3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.mm{background:#111827;border-radius:8px;padding:12px;text-align:center}
+.mv{font-size:20px;font-weight:700}.ml{font-size:10px;color:#6b7280;margin-top:4px;line-height:1.3}
+#toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;border:1px solid #4f46e5;color:#e2e8f0;padding:12px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;max-width:320px}
+#toast.show{opacity:1}
+select{width:100%;padding:8px 12px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:13px;outline:none;margin-bottom:10px}
+textarea{width:100%;padding:10px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:12px;outline:none;resize:vertical;min-height:120px;line-height:1.5}
+.csm-tag{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700}
+.csm-Ana{background:#4c1d95;color:#ddd6fe}
+.csm-Francisco{background:#164e63;color:#a5f3fc}
+.csm-Paiva{background:#422006;color:#fed7aa}
+.semaforo{font-size:15px}
+.cadencia-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#111827;border-radius:8px;margin-bottom:6px;border-left:3px solid #374151}
+.cadencia-row.urgente{border-left-color:#ef4444}
+.cadencia-row.atencao{border-left-color:#f59e0b}
+.cadencia-row.emdia{border-left-color:#10b981}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="header">
+  <div class="logo">Applause <span>CS Intelligence</span> 🎯</div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:12px;color:#9ca3af" id="lastSync">Carregando dados...</span>
+    <button class="sync-btn" onclick="init()">⟳ Atualizar</button>
+  </div>
+</div>
+<div class="filters">
+  <span class="filter-label">Status:</span>
+  <button id="f1" class="fbtn f-ob" onclick="toggleF('onboarding','f1','f-ob')">🟦 Onboarding (15)</button>
+  <button id="f2" class="fbtn f-ad" onclick="toggleF('adoption','f2','f-ad')">🟩 Adoption (27)</button>
+  <button id="f3" class="fbtn f-on" onclick="toggleF('ongoing','f3','f-on')">🟪 Ongoing (44)</button>
+  <button id="f4" class="fbtn" onclick="toggleF('churn','f4','f-ch')">🟥 Churn (53)</button>
+  <span style="color:#374151;margin:0 6px">|</span>
+  <span class="filter-label">Buscar:</span>
+  <input class="search-input" id="srch" type="text" placeholder="Nome da empresa..." oninput="renderTable()">
+</div>
+<div class="tab-row">
+  <div class="tab active" id="tb1" onclick="goTab(1)">📊 Visão Geral</div>
+  <div class="tab" id="tb2" onclick="goTab(2)">🏢 Empresas</div>
+  <div class="tab" id="tb3" onclick="goTab(3)">🔔 Alertas</div>
+  <div class="tab" id="tb4" onclick="goTab(4)">⚙️ Gatilhos</div>
+  <div class="tab" id="tb5" onclick="goTab(5)">🔗 Integrações</div>
+</div>
+
+<!-- TAB 1 -->
+<div id="t1" class="tc active">
+  <div class="kpi-row">
+    <div class="kc kb"><div class="kl">Empresas Ativas</div><div class="kv">86</div><div class="ks">Onb+Adop+Ongoing</div></div>
+    <div class="kc kc2"><div class="kl">Onboarding</div><div class="kv">15</div><div class="ks">Em implantação</div><span class="badge bw">⚠ Acompanhar</span></div>
+    <div class="kc kg"><div class="kl">Adoption</div><div class="kv">27</div><div class="ks">Expandindo uso</div><span class="badge bu">↑ Crescimento</span></div>
+    <div class="kc kp"><div class="kl">Ongoing</div><div class="kv">44</div><div class="ks">Clientes maduros</div><span class="badge bu">✓ Estável</span></div>
+    <div class="kc ka"><div class="kl">Engaj. 30 dias</div><div class="kv">12,1%</div><div class="ks">Usuários com login</div><span class="badge bw">⚠ Baixo</span></div>
+    <div class="kc kr"><div class="kl">Em Churn</div><div class="kv">53</div><div class="ks">19,6% da base</div><span class="badge bd">↓ Atenção!</span></div>
+  </div>
+  <p class="stitle">Pipeline de Clientes</p>
+  <div class="g3" style="margin-top:16px">
+    <div class="card">
+      <div class="ct">📈 Pipeline de Status</div>
+      <div class="pi"><div class="pn">Onboarding</div><div class="pt"><div class="pf" id="pb1" style="width:0%;background:#0891b2"></div></div><div class="pnum">15</div></div>
+      <div class="pi"><div class="pn">Adoption</div><div class="pt"><div class="pf" id="pb2" style="width:0%;background:#059669"></div></div><div class="pnum">27</div></div>
+      <div class="pi"><div class="pn">Ongoing</div><div class="pt"><div class="pf" id="pb3" style="width:0%;background:#7c3aed"></div></div><div class="pnum">44</div></div>
+      <div class="pi"><div class="pn">Churn</div><div class="pt"><div class="pf" id="pb4" style="width:0%;background:#dc2626"></div></div><div class="pnum">53</div></div>
+      <div class="pi"><div class="pn">Não reg.</div><div class="pt"><div class="pf" id="pb5" style="width:0%;background:#374151"></div></div><div class="pnum">119</div></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #2d2d44">
+        <div style="font-size:11px;color:#6b7280">Taxa de Churn</div>
+        <div style="font-size:26px;font-weight:700;color:#ef4444;margin-top:4px">19,6% <span style="font-size:12px;color:#6b7280">das empresas</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Engajamento</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:10px;background:#111827;border-radius:8px"><div style="font-size:11px;color:#6b7280;margin-bottom:3px">Usuários contratados</div><div style="font-size:24px;font-weight:700;color:#3b82f6">66.554</div></div>
+        <div style="padding:10px;background:#111827;border-radius:8px"><div style="font-size:11px;color:#6b7280;margin-bottom:3px">Usuários ativos</div><div style="font-size:24px;font-weight:700;color:#10b981">32.322 <span style="font-size:12px;color:#6b7280">de 46.286</span></div></div>
+        <div style="padding:10px;background:#111827;border-radius:8px"><div style="font-size:11px;color:#6b7280;margin-bottom:3px">Ganhando pontos (30d)</div><div style="font-size:24px;font-weight:700;color:#f59e0b">7,94%</div></div>
+        <div style="padding:10px;background:#1f0a0a;border-radius:8px;border-left:3px solid #ef4444"><div style="font-size:11px;color:#ef4444;font-weight:700">⚠ ALERTA CRÍTICO</div><div style="font-size:12px;color:#9ca3af;margin-top:3px">87,89% dos usuários NÃO logaram em 30 dias</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">💸 Breakage</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:14px;background:#111827;border-radius:8px;text-align:center"><div style="font-size:11px;color:#6b7280;margin-bottom:4px">Total expirado</div><div style="font-size:28px;font-weight:700;color:#f59e0b">R$ 159.705</div><div style="font-size:11px;color:#6b7280;margin-top:4px">499.081 pontos</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="padding:10px;background:#111827;border-radius:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:#ef4444">88</div><div style="font-size:11px;color:#6b7280;margin-top:3px">Empresas</div></div>
+          <div style="padding:10px;background:#111827;border-radius:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:#ef4444">1.273</div><div style="font-size:11px;color:#6b7280;margin-top:3px">Usuários</div></div>
+        </div>
+        <div style="padding:10px;background:#111827;border-radius:8px"><div style="font-size:11px;color:#6b7280;margin-bottom:3px">Este mês (mai/2026)</div><div style="font-size:20px;font-weight:700;color:#f59e0b">R$ 4.557 <span style="font-size:11px;color:#10b981">↑1,99%</span></div></div>
+      </div>
+    </div>
+  </div>
+  <p class="stitle" style="margin-top:8px">Cadência — Resumo por CSM</p>
+  <div class="g3" style="margin-top:16px">
+    <div class="card"><div class="ct">📋 Resumo de Saúde CS</div><div id="resumo-cadencia"><div style="color:#6b7280;font-size:13px">⏳ Carregando planilha...</div></div></div>
+    <div class="card">
+      <div class="ct">📊 Compras de Pontos — 6 meses</div>
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <div style="font-size:11px;color:#6b7280;margin-top:10px;text-align:center">Fonte: Metabase — Aba Pontos</div>
+    </div>
+    <div class="card">
+      <div class="ct">💼 Indicadores CS</div>
+      <div style="padding:14px;background:#111827;border-radius:10px;border:1px dashed #374151;text-align:center;margin-bottom:12px">
+        <p style="font-size:12px;color:#6b7280;margin-bottom:10px;line-height:1.5">🔗 Conecte o HubSpot para ver<br><strong style="color:#a5b4fc">Upsell · Crossell · NRR</strong></p>
+        <button class="btn bp" onclick="goTab(5)">→ Ir para Integrações</button>
+      </div>
+      <div class="m3">
+        <div class="mm"><div class="mv" style="color:#10b981">—</div><div class="ml">Net Revenue<br>Retention</div></div>
+        <div class="mm"><div class="mv" style="color:#f59e0b">—</div><div class="ml">Upsells<br>ativos</div></div>
+        <div class="mm"><div class="mv" style="color:#8b5cf6">—</div><div class="ml">Crossells<br>ativos</div></div>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:#111827;border-radius:8px">
+        <div style="font-size:11px;color:#6b7280;margin-bottom:6px;font-weight:700">MISSÕES E METAS</div>
+        <div style="font-size:12px;color:#9ca3af">• 1.586 metas cadastradas</div>
+        <div style="font-size:12px;color:#9ca3af;margin-top:4px">• Pico mai/2026: ~450k pts em missões</div>
+        <div style="font-size:12px;color:#9ca3af;margin-top:4px">• 3.100+ usuários em missões ativas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: EMPRESAS -->
+<div id="t2" class="tc">
+  <div style="padding:24px 32px">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div class="ct" style="margin:0">🏢 Cadência por Empresa <span id="cnt" style="font-size:11px;color:#6b7280;font-weight:400"></span></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn bw2" onclick="msgMassa()">📨 Mensagem em Massa</button>
+          <button class="btn bp" onclick="exportar()">⬇ Exportar CSV</button>
+        </div>
+      </div>
+      <div id="sheet-status" style="padding:8px 12px;background:#111827;border-radius:8px;font-size:12px;color:#6b7280;margin-bottom:12px">⏳ Buscando dados da planilha de cadência...</div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Empresa</th><th>CSM</th><th>Fase</th><th>Último Contato</th><th>Dias sem contato</th><th>Cadência</th><th>Status</th><th>Próximo Contato</th><th>Notas</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: ALERTAS -->
+<div id="t3" class="tc">
+  <div style="padding:24px 32px">
+    <div class="g2">
+      <div class="card">
+        <div class="ct">🚨 Alertas Ativos</div>
+        <div id="alertas-cadencia"><div style="color:#6b7280;font-size:13px">⏳ Carregando alertas da planilha...</div></div>
+        <div style="margin-top:16px;border-top:1px solid #2d2d44;padding-top:14px">
+          <div class="ct">📡 Alertas do Metabase</div>
+          <div class="ai ac"><div class="aico">🔴</div><div><div class="atxt"><strong>53 empresas em Churn</strong> — 19,6% da base. Acionar plano de recuperação urgente.</div><div class="atime">Metabase · Agora</div></div></div>
+          <div class="ai ac"><div class="aico">🔴</div><div><div class="atxt"><strong>87,89% dos usuários inativos</strong> — Apenas 12,11% logaram em 30 dias.</div><div class="atime">Metabase · Agora</div></div></div>
+          <div class="ai aw"><div class="aico">🟡</div><div><div class="atxt"><strong>R$ 159.705 em pontos expirados</strong> — 88 empresas com breakage acumulado.</div><div class="atime">Metabase · Agora</div></div></div>
+          <div class="ai aw"><div class="aico">🟡</div><div><div class="atxt"><strong>119 empresas Não Registradas</strong> — Sem acompanhamento de CS.</div><div class="atime">Metabase · Agora</div></div></div>
+          <div class="ai ao"><div class="aico">🟢</div><div><div class="atxt"><strong>Pontos em alta</strong> — Pico de compras em abr/2026 (3,7M pts).</div><div class="atime">Metabase · Agora</div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">📨 Disparar Alerta Manual</div>
+        <label style="font-size:12px;color:#9ca3af;display:block;margin-bottom:6px">Para quem:</label>
+        <select id="dest"><option>Time de CS (interno)</option><option>Admins das empresas</option><option>CS + Admins</option></select>
+        <label style="font-size:12px;color:#9ca3af;display:block;margin-bottom:6px">Tipo de alerta:</label>
+        <select id="tipo" onchange="gerarMsg()">
+          <option value="inativo">Usuários inativos há 30 dias</option>
+          <option value="churn">Risco de churn identificado</option>
+          <option value="pontos">Pontos prestes a expirar</option>
+          <option value="reuniao">Lembrete de reunião com sponsor</option>
+          <option value="upsell">Oportunidade de upsell detectada</option>
+        </select>
+        <label style="font-size:12px;color:#9ca3af;display:block;margin-bottom:6px">Mensagem:</label>
+        <textarea id="msgtxt"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn bp" onclick="gerarMsg()">🤖 Gerar com IA</button>
+          <button class="btn bs" onclick="enviar()">📤 Simular Envio</button>
+        </div>
+        <div id="msgok" style="display:none;padding:10px;background:#052e16;border-radius:8px;border-left:3px solid #10b981;font-size:12px;color:#4ade80;margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: GATILHOS -->
+<div id="t4" class="tc">
+  <div style="padding:24px 32px">
+    <div class="g2">
+      <div class="card">
+        <div class="ct">⚙️ Gatilhos Automáticos de CS</div>
+        <p style="font-size:12px;color:#6b7280;margin-bottom:16px;line-height:1.5">Ative os gatilhos. Quando as condições forem atendidas, o sistema dispara mensagens para o CS ou para o cliente.</p>
+        <div class="tri"><div><div class="tn">🔴 Empresa sem login há 30+ dias</div><div class="td">Envia alerta para o CS responsável</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">🟡 Pontos expirando em 15 dias</div><div class="td">Notifica o admin da empresa</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">📅 Sem reunião com sponsor há 30d</div><div class="td">Alerta para CS agendar check-in</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">🚨 Empresa em risco de churn</div><div class="td">Score baixo → aciona playbook de retenção</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">🎯 Alta engajamento → Oportunidade upsell</div><div class="td">80%+ engajamento → sugere expansão</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">📊 Relatório semanal de CS</div><div class="td">Toda segunda, resumo para o time</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">💸 Breakage acima de R$ 500/mês</div><div class="td">Alerta financeiro para gestão</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tri"><div><div class="tn">📅 Cadência vencida na planilha</div><div class="td">🔴 Urgente → avisa o CSM responsável</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+      <div class="card">
+        <div class="ct">📋 Como funcionam os gatilhos</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;color:#9ca3af;line-height:1.6">
+          <div style="padding:12px;background:#111827;border-radius:8px"><strong style="color:#a5b4fc">Passo 1 — Condição</strong><br>O sistema verifica os dados do Metabase e da planilha de cadência automaticamente</div>
+          <div style="padding:12px;background:#111827;border-radius:8px"><strong style="color:#a5b4fc">Passo 2 — Geração da mensagem</strong><br>A IA (Claude) gera uma mensagem personalizada com o contexto da empresa</div>
+          <div style="padding:12px;background:#111827;border-radius:8px"><strong style="color:#a5b4fc">Passo 3 — Disparo</strong><br>Envia por e-mail (EmailJS), Slack (webhook) ou WhatsApp para o CS ou admin</div>
+          <div style="padding:12px;background:#0a1628;border-radius:8px;border-left:3px solid #3b82f6"><strong style="color:#60a5fa">💡 Para ativar disparos reais</strong><br>Configure o e-mail na aba Integrações.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5: INTEGRAÇÕES -->
+<div id="t5" class="tc">
+  <div style="padding:24px 32px">
+    <div class="g3">
+      <div class="card">
+        <div class="ct">📡 Metabase</div>
+        <div style="padding:10px;background:#052e16;border-radius:8px;border-left:3px solid #10b981;font-size:12px;color:#4ade80;margin-bottom:14px">✅ Conectado — Dashboard público ativo</div>
+        <div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:10px">Dados de <strong style="color:#e2e8f0">Usuários, Pontos, Missões e Breakage</strong> carregados da Applause.</div>
+        <div style="font-size:11px;color:#6b7280;word-break:break-all;background:#111827;padding:8px;border-radius:6px;margin-bottom:12px">https://tlc.metabaseapp.com/public/dashboard/32a59348...</div>
+        <button class="btn bp" onclick="toast('✅ Metabase reconectado!')">⟳ Reconectar</button>
+      </div>
+      <div class="card">
+        <div class="ct">📋 Google Sheets — Cadência CS</div>
+        <div id="sheets-int-status" style="padding:10px;background:#1c1207;border-radius:8px;border-left:3px solid #f59e0b;font-size:12px;color:#fbbf24;margin-bottom:14px">⏳ Verificando conexão...</div>
+        <div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:12px">Planilha de cadência conectada automaticamente via Google Sheets público.</div>
