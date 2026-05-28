@@ -207,23 +207,112 @@ textarea{width:100%;padding:10px;background:#111827;border:1px solid #374151;bor
 
 <!-- TAB 2: EMPRESAS -->
 <div id="t2" class="tc">
-  <div style="padding:24px 32px">
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div class="ct" style="margin:0">🏢 Cadência por Empresa <span id="cnt" style="font-size:11px;color:#6b7280;font-weight:400"></span></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn bw2" onclick="msgMassa()">📨 Mensagem em Massa</button>
-          <button class="btn bp" onclick="exportar()">⬇ Exportar CSV</button>
-        </div>
-      </div>
-      <div id="sheet-status" style="padding:8px 12px;background:#111827;border-radius:8px;font-size:12px;color:#6b7280;margin-bottom:12px">⏳ Buscando dados da planilha de cadência...</div>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-<thead><tr><th>Empresa</th><th>CSM</th><th>Fase</th><th>Último Contato</th><th>Dias sem contato</th><th>Cadência</th><th>Cadência</th><th>Health Score</th><th>Próximo Contato</th></tr></thead>          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<div style="padding:24px 32px">
+
+<!-- BARRA DE BUSCA + SELETOR -->
+<div style="display:flex;gap:12px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
+<div class="ct" style="margin:0;flex:1">🏢 Análise por Empresa</div>
+<select id="empresa-select" onchange="abrirEmpresa()" style="width:280px;padding:8px 12px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:13px;outline:none">
+<option value="">— Selecione uma empresa —</option>
+</select>
+<button class="btn bp" onclick="exportar()">⬇ Exportar CSV</button>
+</div>
+
+<!-- PAINEL EMPRESA SELECIONADA -->
+<div id="empresa-painel" style="display:none">
+
+<!-- HEADER DA EMPRESA -->
+<div id="empresa-header" style="background:#1a1a2e;border:1px solid #2d2d44;border-radius:12px;padding:20px;margin-bottom:18px">
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+<div>
+<div id="empresa-nome" style="font-size:20px;font-weight:700;color:#f1f5f9"></div>
+<div id="empresa-sub" style="font-size:12px;color:#6b7280;margin-top:4px"></div>
+</div>
+<div style="display:flex;gap:10px;align-items:center">
+<div id="empresa-hs-badge" style="font-size:28px;font-weight:700"></div>
+<div id="empresa-status-badge"></div>
+</div>
+</div>
+</div>
+
+<!-- KPIs RÁPIDOS -->
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px" id="empresa-kpis"></div>
+
+<!-- GRÁFICOS MoM -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+<div class="card">
+<div class="ct">📈 Pontos Comprados — MoM</div>
+<div style="height:200px;position:relative"><canvas id="chart-compras"></canvas></div>
+<div id="mom-compras" style="font-size:11px;color:#6b7280;margin-top:8px;text-align:center"></div>
+</div>
+<div class="card">
+<div class="ct">📉 Pontos Gastos — MoM</div>
+<div style="height:200px;position:relative"><canvas id="chart-gastos"></canvas></div>
+<div id="mom-gastos" style="font-size:11px;color:#6b7280;margin-top:8px;text-align:center"></div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+<div class="card">
+<div class="ct">🎯 Usuários em Missões — MoM</div>
+<div style="height:200px;position:relative"><canvas id="chart-missoes"></canvas></div>
+<div id="yoy-missoes" style="font-size:11px;color:#6b7280;margin-top:8px;text-align:center"></div>
+</div>
+<div class="card">
+<div class="ct">💸 Breakage — MoM</div>
+<div style="height:200px;position:relative"><canvas id="chart-breakage"></canvas></div>
+<div id="mom-breakage" style="font-size:11px;color:#6b7280;margin-top:8px;text-align:center"></div>
+</div>
+</div>
+
+<!-- TABELA PONTOS POR MÊS -->
+<div class="card" style="margin-bottom:18px">
+<div class="ct">📊 Evolução de Pontos por Mês (Compras / Gastos / Reembolso)</div>
+<div style="overflow-x:auto">
+<table class="tbl">
+<thead><tr><th>Mês</th><th style="text-align:right">Comprados</th><th style="text-align:right">Gastos</th><th style="text-align:right">Reembolso</th><th style="text-align:right">Saldo</th><th style="text-align:center">MoM Compras</th></tr></thead>
+<tbody id="tabela-pontos-mes"></tbody>
+</table>
+</div>
+</div>
+
+<!-- METAS -->
+<div class="card" style="margin-bottom:18px">
+<div class="ct">🏆 Metas Ativas</div>
+<div style="overflow-x:auto">
+<table class="tbl">
+<thead><tr><th>Meta</th><th style="text-align:center">Participantes</th><th style="text-align:right">Pts/Ciclo</th><th style="text-align:right">Total Pago</th><th style="text-align:center">Usuários Pagos</th><th style="text-align:center">Ciclos</th></tr></thead>
+<tbody id="tabela-metas"></tbody>
+</table>
+</div>
+</div>
+
+<!-- CADÊNCIA -->
+<div class="card" style="margin-bottom:18px">
+<div class="ct">📋 Status de Cadência CS</div>
+<div id="empresa-cadencia" style="color:#6b7280;font-size:13px">Carregando...</div>
+</div>
+
+</div><!-- fim empresa-painel -->
+
+<!-- TABELA GERAL (quando nenhuma empresa selecionada) -->
+<div id="tabela-geral">
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+<div class="ct" style="margin:0">Lista de Empresas <span id="cnt" style="font-size:11px;color:#6b7280;font-weight:400"></span></div>
+<button class="btn bw2" onclick="msgMassa()">📨 Mensagem em Massa</button>
+</div>
+<div id="sheet-status" style="padding:8px 12px;background:#111827;border-radius:8px;font-size:12px;color:#6b7280;margin-bottom:12px">⏳ Carregando...</div>
+<div style="overflow-x:auto">
+<table class="tbl">
+<thead><tr><th>Empresa</th><th>CSM</th><th>Fase</th><th>Último Contato</th><th>Dias sem contato</th><th>Cadência</th><th>Cadência</th><th>Health Score</th><th>Próximo Contato</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
 </div>
 
 <!-- TAB 3: ALERTAS -->
