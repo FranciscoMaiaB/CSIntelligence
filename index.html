@@ -168,6 +168,14 @@ textarea{width:100%;padding:10px;background:#111827;border:1px solid #374151;bor
       </div>
     </div>
   </div>
+  <p class="stitle" style="margin-top:8px">Health Score — Metabase + Cadência</p>
+<div class="g3" style="margin-top:16px">
+<div class="card" style="grid-column:span 3">
+<div class="ct">🏥 Health Score Agregado por Empresa</div>
+<div id="mb-hs-status" style="padding:10px;background:#1c1207;border-radius:8px;border-left:3px solid #f59e0b;font-size:12px;color:#fbbf24;margin-bottom:14px">⏳ Carregando Health Score do Metabase...</div>
+<div id="hs-global"><div style="color:#6b7280;font-size:13px">⏳ Aguardando dados...</div></div>
+</div>
+</div>
   <p class="stitle" style="margin-top:8px">Cadência — Resumo por CSM</p>
   <div class="g3" style="margin-top:16px">
     <div class="card"><div class="ct">📋 Resumo de Saúde CS</div><div id="resumo-cadencia"><div style="color:#6b7280;font-size:13px">⏳ Carregando planilha...</div></div></div>
@@ -211,8 +219,7 @@ textarea{width:100%;padding:10px;background:#111827;border:1px solid #374151;bor
       <div id="sheet-status" style="padding:8px 12px;background:#111827;border-radius:8px;font-size:12px;color:#6b7280;margin-bottom:12px">⏳ Buscando dados da planilha de cadência...</div>
       <div style="overflow-x:auto">
         <table class="tbl">
-          <thead><tr><th>Empresa</th><th>CSM</th><th>Fase</th><th>Último Contato</th><th>Dias sem contato</th><th>Cadência</th><th>Status</th><th>Próximo Contato</th><th>Notas</th></tr></thead>
-          <tbody id="tbody"></tbody>
+<thead><tr><th>Empresa</th><th>CSM</th><th>Fase</th><th>Último Contato</th><th>Dias sem contato</th><th>Cadência</th><th>Cadência</th><th>Health Score</th><th>Próximo Contato</th></tr></thead>          <tbody id="tbody"></tbody>
         </table>
       </div>
     </div>
@@ -290,19 +297,42 @@ textarea{width:100%;padding:10px;background:#111827;border:1px solid #374151;bor
 
 <!-- TAB 5: INTEGRAÇÕES -->
 <div id="t5" class="tc">
-  <div style="padding:24px 32px">
-    <div class="g3">
-      <div class="card">
-        <div class="ct">📡 Metabase</div>
-        <div style="padding:10px;background:#052e16;border-radius:8px;border-left:3px solid #10b981;font-size:12px;color:#4ade80;margin-bottom:14px">✅ Conectado — Dashboard público ativo</div>
-        <div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:10px">Dados de <strong style="color:#e2e8f0">Usuários, Pontos, Missões e Breakage</strong> carregados da Applause.</div>
-        <div style="font-size:11px;color:#6b7280;word-break:break-all;background:#111827;padding:8px;border-radius:6px;margin-bottom:12px">https://tlc.metabaseapp.com/public/dashboard/32a59348...</div>
-        <button class="btn bp" onclick="toast('✅ Metabase reconectado!')">⟳ Reconectar</button>
-      </div>
-      <div class="card">
-        <div class="ct">📋 Google Sheets — Cadência CS</div>
-        <div id="sheets-int-status" style="padding:10px;background:#1c1207;border-radius:8px;border-left:3px solid #f59e0b;font-size:12px;color:#fbbf24;margin-bottom:14px">⏳ Verificando conexão...</div>
-        <div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:12px">Planilha de cadência conectada automaticamente via Google Sheets público.</div>
+<div style="padding:24px 32px">
+<div class="g3">
+<div class="card">
+<div class="ct">📡 Metabase</div>
+<div id="mb-hs-status" style="padding:10px;background:#1c1207;border-radius:8px;border-left:3px solid #f59e0b;font-size:12px;color:#fbbf24;margin-bottom:14px">⏳ Carregando Health Score...</div>
+<div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:10px">Dados de <strong style="color:#e2e8f0">Usuários, Pontos, Missões e Breakage</strong> carregados da Applause.</div>
+<div style="font-size:11px;color:#6b7280;word-break:break-all;background:#111827;padding:8px;border-radius:6px;margin-bottom:12px">https://tlc.metabaseapp.com/public/dashboard/32a59348...</div>
+<button class="btn bp" onclick="toast('✅ Metabase reconectado!')">⟳ Reconectar</button>
+</div>
+<div class="card">
+<div class="ct">📋 Google Sheets — Cadência CS</div>
+<div id="sheets-int-status" style="padding:10px;background:#1c1207;border-radius:8px;border-left:3px solid #f59e0b;font-size:12px;color:#fbbf24;margin-bottom:14px">⏳ Verificando conexão...</div>
+<div style="font-size:12px;color:#9ca3af;line-height:1.6;margin-bottom:12px">Planilha de cadência conectada automaticamente via Google Sheets público.</div>
+</div>
+<div class="card">
+<div class="ct">🔗 HubSpot / Outras Integrações</div>
+<div style="padding:14px;background:#111827;border-radius:10px;border:1px dashed #374151;text-align:center">
+<p style="font-size:12px;color:#6b7280;margin-bottom:10px;line-height:1.5">Em breve: <strong style="color:#a5b4fc">HubSpot · Slack · EmailJS</strong></p>
+</div>
+</div>
+</div>
+<p class="stitle" style="margin-top:8px">Ranking de Health Score — Todas as Empresas</p>
+<div style="padding:0 32px 24px">
+<div class="card">
+<div class="ct">📊 Health Score Agregado (Metabase 70% + Cadência 30%)</div>
+<div style="overflow-x:auto">
+<table class="tbl">
+<thead><tr><th>Empresa</th><th>Status</th><th>Health Score Final</th><th>Score Metabase</th><th>% Ativos</th><th>% Login 30d</th><th>Cadência</th></tr></thead>
+<tbody id="hs-table-body"><tr><td colspan="7" style="text-align:center;padding:20px;color:#6b7280">⏳ Carregando dados do Metabase...</td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
